@@ -17,7 +17,7 @@ export const DeleteBtn = styled.button`
   align-items: center;
   justify-content: center;
 
-  width: 50px;
+  width: 65px;
   border-radius: 4px;
   height: 30px;
   padding: 10px;
@@ -27,4 +27,7 @@ export const DeleteBtn = styled.button`
   color: white;
 
   cursor: pointer;
+  &:disabled {
+    background-color: #bf381d;
+  }
 `;

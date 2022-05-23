@@ -1,24 +1,12 @@
-import { 
-  // useDispatch, 
-  useSelector 
-} from "react-redux";
-import { 
-  // removeContacts, 
-  // getContacts, 
-  getFilter } 
-  from "redux/itemsSlice";
+import { useSelector } from "react-redux";
+import { getFilter } from "redux/itemsSlice";
 import { Contact } from 'components/Contact/Contact';
-import {
-  ContactListEl,
-  ContactListItem
-} from './ContactList.styled';
+import { ContactListEl, ContactListItem } from './ContactList.styled';
+import { useFetchContactsQuery } from 'redux/contacts/contactsSlice';
 
-// import { useFetchContactsQuery } from 'redux/contacts/contactsSlice';
+export const ContactList = () => {
+  const { data: contacts } = useFetchContactsQuery();
 
-export const ContactList = ({contacts}) => {
-
-  // const dispatch = useDispatch();
-  // const contactsItems = useSelector(getContacts);
   const fiterItems = useSelector(getFilter);
 
   const filteredContactList = () => {
@@ -42,20 +30,3 @@ export const ContactList = ({contacts}) => {
     </ContactListEl>
   );
 };
-
-
-
-// return (
-//     <ContactListEl>
-//       {filteredContactList().map(({ id, name, number }) => (
-//         <ContactListItem key={id}>
-//           <Contact
-//             contactId={id}
-//             name={name}
-//             number={number}
-//             onDeleteContact={deleteContact}
-//           />
-//         </ContactListItem>
-//       ))}
-//     </ContactListEl>
-//   );

@@ -1,22 +1,17 @@
-// import { nanoid } from "nanoid";
 import { useState } from 'react';
 import { Form, Label, Text, Input, AddContactBtn } from './ContactForm.styled';
 import { toast } from 'react-toastify';
-// import { useDispatch, useSelector } from "react-redux";
-// import { addContacts, getContacts } from "redux/itemsSlice";
-import { useCreateContactMutation } from "redux/contacts/contactsSlice";
+import { useFetchContactsQuery } from 'redux/contacts/contactsSlice';
+import { useCreateContactMutation } from 'redux/contacts/contactsSlice';
 
-export const ContactForm = ({contacts}) => {
-
+export const ContactForm = () => {
+  const { data: contacts } = useFetchContactsQuery();
   const [createContact] = useCreateContactMutation();
- 
-  // const dispatch = useDispatch();
-  // const contactsItems = useSelector(getContacts);
 
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const heandleInputChange = (event) => {
+  const heandleInputChange = event => {
     const { name, value } = event.currentTarget;
 
     switch (name) {
@@ -25,7 +20,7 @@ export const ContactForm = ({contacts}) => {
         break;
       case 'number':
         setNumber(value);
-        break; 
+        break;
       default:
         return;
     }
@@ -33,28 +28,31 @@ export const ContactForm = ({contacts}) => {
 
   const heandleAddContact = ({ name, number }) => {
     const newContact = {
-      // id: nanoid(),
       name,
       number,
     };
-    contacts.some(contact => contact.name.toLowerCase() === name.toLowerCase())
-      ? toast.error(`${name} is already in contacts`)
-      : createContact(newContact)
-    // console.log(data);
-    // createContact(newContact)
+    if (
+      contacts.some(
+        contact => contact.name.toLowerCase() === name.toLowerCase()
+      )
+    ) {
+      toast.error(`${name} is already in contacts`);
+      return;
+    } else {
+      createContact(newContact);
+      toast.success(`${name} added to contacts!`);
+    }
   };
 
   const heandleSubmit = event => {
     event.preventDefault();
-    heandleAddContact({name, number});
+    heandleAddContact({ name, number });
     formFieldsReset();
-    // createContact(newContact);
-
   };
 
   const formFieldsReset = () => {
     setName('');
-    setNumber('')
+    setNumber('');
   };
 
   return (
@@ -70,7 +68,7 @@ export const ContactForm = ({contacts}) => {
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
             required
-            placeholder='Full name'
+            placeholder="Full name"
           />
         </Label>
 
@@ -84,7 +82,7 @@ export const ContactForm = ({contacts}) => {
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required
-            placeholder='+XX-(XXX)-XXX-XX-XX'
+            placeholder="+XX-(XXX)-XXX-XX-XX"
           />
         </Label>
         <AddContactBtn type="submit">Add contact</AddContactBtn>

@@ -1,14 +1,17 @@
-import { nanoid } from "nanoid";
+// import { nanoid } from "nanoid";
 import { useState } from 'react';
 import { Form, Label, Text, Input, AddContactBtn } from './ContactForm.styled';
 import { toast } from 'react-toastify';
-import { useDispatch, useSelector } from "react-redux";
-import { addContacts, getContacts } from "redux/itemsSlice";
+// import { useDispatch, useSelector } from "react-redux";
+// import { addContacts, getContacts } from "redux/itemsSlice";
+import { useCreateContactMutation } from "redux/contacts/contactsSlice";
 
-export const ContactForm = () => {
+export const ContactForm = ({contacts}) => {
 
-  const dispatch = useDispatch();
-  const contactsItems = useSelector(getContacts);
+  const [createContact] = useCreateContactMutation();
+ 
+  // const dispatch = useDispatch();
+  // const contactsItems = useSelector(getContacts);
 
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
@@ -20,11 +23,9 @@ export const ContactForm = () => {
       case 'name':
         setName(value);
         break;
-    
       case 'number':
         setNumber(value);
-        break;
-      
+        break; 
       default:
         return;
     }
@@ -32,19 +33,23 @@ export const ContactForm = () => {
 
   const heandleAddContact = ({ name, number }) => {
     const newContact = {
-      id: nanoid(),
+      // id: nanoid(),
       name,
       number,
     };
-    contactsItems.some(contact => contact.name.toLowerCase() === name.toLowerCase())
+    contacts.some(contact => contact.name.toLowerCase() === name.toLowerCase())
       ? toast.error(`${name} is already in contacts`)
-      : dispatch(addContacts(newContact))
+      : createContact(newContact)
+    // console.log(data);
+    // createContact(newContact)
   };
 
   const heandleSubmit = event => {
     event.preventDefault();
-    heandleAddContact({name, number})
-    formFieldsReset()
+    heandleAddContact({name, number});
+    formFieldsReset();
+    // createContact(newContact);
+
   };
 
   const formFieldsReset = () => {
